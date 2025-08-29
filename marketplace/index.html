@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeKart Marketplace</title>
+  <link rel="icon" type="image/png" href="assets/images/Technological_Circuit_Logo_in_Orange-removebg-preview.png">
+  <link rel="stylesheet" href="assets/style/style.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div id="logo">
+      <img src="assets/images/Technological_Circuit_Logo_in_Orange-removebg-preview.png" alt="CodeKart Logo">
+      <span>CodeKart</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="prouduct.html">Explore</a></li>
+        <li><a href="sell.html">Sell</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="hamburger">&#9776;</div>
+  </header>
+<!-- ✅ Announcement Modal -->
+<div id="announcement-modal" class="modal">
+  <div class="modal-content">
+    <h2>🚧 CodeKart Update</h2>
+    <p>
+      Our <strong>payment gateway integration</strong> is in progress.<br>
+      For now, <strong>all downloads are FREE</strong> 🎉
+    </p>
+    <p>
+      Want to contribute your own projects?  
+      <a href="sell.html" style="color:var(--primary);font-weight:600;">Upload your code here</a>
+    </p>
+    <div class="modal-actions">
+      <button id="closeModalBtn" class="btn">Got it</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Modal backdrop */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.55);
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: var(--card, #fff);
+    color: var(--text, #111);
+    padding: 2rem 1.5rem;
+    border-radius: 16px;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: 0 8px 25px rgba(0,0,0,.25);
+    text-align: center;
+    animation: popIn .3s ease;
+  }
+  .modal-content h2 {
+    margin-bottom: 1rem;
+    color: var(--primary,#FF6B6B);
+    font-size: 1.6rem;
+  }
+  .modal-content p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+  .modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+  .modal-actions .btn {
+    background: var(--primary);
+    color: #fff;
+    padding: .8rem 1.6rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+    font-size: 1rem;
+  }
+  .modal-actions .btn:hover {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("announcement-modal");
+    const gotItBtn = document.getElementById("closeModalBtn");
+
+    if (!sessionStorage.getItem("announcementShown")) {
+      modal.style.display = "flex";
+      sessionStorage.setItem("announcementShown", "true");
+    }
+
+    gotItBtn.addEventListener("click", () => modal.style.display = "none");
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    });
+  });
+</script>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-text">
+      <h1>India’s Developer Marketplace</h1>
+      <p>Buy & sell code projects, scripts, templates — with Indian payment support 🇮🇳</p>
+      
+      <!-- Signed OUT state -->
+      <div class="hero-buttons auth-signed-out">
+        <a href="login.html" class="btn-primary">Login</a>
+        <a href="signup.html" class="btn-secondary">Sign Up</a>
+      </div>
+
+      <!-- Signed IN state -->
+      <div class="hero-buttons auth-signed-in" style="display:none">
+        <span id="welcome-name" style="margin-right:10px; font-weight:bold;"></span>
+        <a href="dashboard.html" class="btn-primary">Dashboard</a>
+        <a href="profile.html" class="btn-secondary">Profile</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founder Story -->
+  <section id="founder-story">
+    <div class="fs-wrap">
+      <div class="fs-badge">My Story</div>
+      <h2>Why I’m building CodeKart</h2>
+      <p class="fs-intro">
+        Hey, I’m Atharva — a student + developer from India. I’ve spent the last few years
+        building small apps, learning in public, and dreaming of a place where creators like us
+        can sell code, templates, and tools <em>without</em> fighting paywalls or USD pricing.
+      </p>
+
+      <div class="fs-cards">
+        <article class="fs-card">
+          <h3>Where it started</h3>
+          <p>
+            I began with simple projects on a laptop that could barely handle VS Code. No fancy gear,
+            just curiosity and a lot of late nights. Every download, every kind comment kept me going.
+          </p>
+        </article>
+
+        <article class="fs-card">
+          <h3>The dream</h3>
+          <p>
+            Build India’s most helpful marketplace for devs and designers — a place where a
+            weekend project can turn into someone’s first online income. If CodeKart works,
+            it won’t just be my win. It’ll be ours.
+          </p>
+        </article>
+
+        <article class="fs-card">
+          <h3>Why your support matters</h3>
+          <p>
+            Every visit, share, and purchase keeps this project alive. I’m genuinely grateful
+            you’re here. If you believe in this, consider grabbing a template, listing one, or
+            just telling a friend. Thank you. ❤️
+          </p>
+        </article>
+      </div>
+
+      <div class="fs-cta">
+        <a href="prouduct.html" class="btn-primary">Browse Templates</a>
+        <a href="sell.html" class="btn-secondary">List Your Product</a>
+      </div>
+
+      <p class="fs-note">– Atharva, Founder of CodeKart</p>
+    </div>
+  </section>
+
+  <!-- Why Choose CodeKart -->
+  <section id="features-home">
+    <h2>Why Choose CodeKart?</h2>
+    <div class="features-home-grid">
+      <div class="feature-home-card">
+        <h3>🇮🇳 Indian Payments</h3>
+        <p>Receive payments via UPI, Paytm, PhonePe or any UPI app</p>
+      </div>
+      <div class="feature-home-card">
+        <h3>🚀 Fast Uploads</h3>
+        <p>Upload and sell your projects in minutes with zero hassle.</p>
+      </div>
+      <div class="feature-home-card">
+        <h3>💻 Dev-Centric</h3>
+        <p>Built for Indian developers, by Indian developers.</p>
+      </div>
+      <div class="feature-home-card">
+        <h3>📂 Ready-to-Use</h3>
+        <p>Buy and sell complete templates, apps, and scripts instantly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-grid">
+      <div class="faq-card">
+        <h3>How do I sell my code?</h3>
+        <p>Sign up, upload your project, set a price, and it will appear in the marketplace instantly.</p>
+      </div>
+      <div class="faq-card">
+        <h3>What payment methods are supported?</h3>
+        <p>UPI, Paytm, PhonePe, and direct bank transfers are all supported for Indian users.</p>
+      </div>
+      <div class="faq-card">
+        <h3>Can I buy multiple templates at once?</h3>
+        <p>Yes! You can add multiple projects to your cart and checkout in one go.</p>
+      </div>
+      <div class="faq-card">
+        <h3>Is my code secure after purchase?</h3>
+        <p>All transactions are encrypted, and downloads are provided directly to the buyer’s account.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials">
+    <h2>What Developers Say</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p>"CodeKart helped me sell my first AI script in just a day. Amazing platform!"</p>
+        <h4>— Rajesh K., Fullstack Dev</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"I love how easy it is to showcase my web templates to Indian buyers."</p>
+        <h4>— Priya S., Frontend Developer</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"Finally, a platform that supports UPI & Paytm for selling code projects!"</p>
+        <h4>— Aman T., App Developer</h4>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community -->
+  <section id="community">
+    <h2>Join Our Community</h2>
+    <p>Connect with thousands of Indian developers, share tips, and grow together.</p>
+    <div class="community-buttons">
+      <a href="https://discord.gg/5kxwBtKj9u" class="btn-primary">Join Discord</a>
+      <a href="https://www.instagram.com/codekart._" class="btn-secondary">Follow Instagram</a>
+      <a href="https://x.com/AtharvaAgh52315" class="btn-primary">Join X</a>
+    </div>
+  </section>
+
+  <!-- Loader -->
+  <div id="loader">
+    <img src="assets/images/Technological_Circuit_Logo_in_Orange-removebg-preview (1).png" alt="CodeKart Logo" class="loader-logo">
+    <h1 class="loader-text">CodeKart</h1>
+  </div>
+
+  <!-- Products Grid -->
+  <section id="products-grid-section">
+    <h2>Top Products</h2>
+    <div class="products-grid">
+      <div class="product-card">
+        <img src="assets/images/Screenshot 2025-08-12 235747.png" alt="Project 1">
+        <h3>Group Study App</h3>
+        <p>Complete rooms-based study app with backend.</p>
+        <a href="#" class="btn">View</a>
+      </div>
+      <div class="product-card">
+        <img src="assets/images/Screenshot 2025-08-21 185856.png" alt="Project 2">
+        <h3>Password Manager</h3>
+        <p>Local storage-based password manager website.</p>
+        <a href="#" class="btn">View</a>
+      </div>
+      <div class="product-card">
+        <img src="assets/images/Screenshot 2025-08-21 190359.png" alt="Project 3">
+        <h3>AI Toolbox</h3>
+        <p>All-in-one AI toolbox for creators and coders.</p>
+        <a href="#" class="btn">View</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta">
+    <h2>Want to Sell Your Templates?</h2>
+    <p>Join CodeKart and start earning today!</p>
+    <a href="sell.html" class="btn">Start Selling</a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-logo">
+        <img src="assets/images/Technological_Circuit_Logo_in_Orange-removebg-preview.png" alt="CodeKart Logo">
+        <span>CodeKart</span>
+      </div>
+      <div class="footer-links">
+        <div class="links-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="prouduct.html">Explore</a></li>
+            <li><a href="sell.html">Sell</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="links-section">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="terms.html">Terms and Conditions</a></li>
+            <li><a href="#">FAQs</a></li>
+          </ul>
+        </div>
+        <div class="links-section">
+          <h4>Follow Us</h4>
+          <ul class="social-links">
+            <li><a href="https://x.com/AtharvaAgh52315">Twitter</a></li>
+            <li><a href="#">LinkedIn</a></li>
+            <li><a href="https://discord.gg/5kxwBtKj9u">Discord</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="newsletter">
+        <h4>Subscribe</h4>
+        <p>Get updates and new templates in your inbox.</p>
+        <form>
+          <input type="email" placeholder="Your email">
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 CodeKart. Made with ❤️ in India.</p>
+    </div>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('nav ul');
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+  </script>
+
+  <!-- ✅ Firebase Auth State (using firebase.js) -->
+  <script type="module">
+    import { auth } from "./assets/js/firebase.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const showSignedIn = (user) => {
+      document.querySelector(".auth-signed-out").style.display = "none";
+      document.querySelector(".auth-signed-in").style.display = "flex";
+      const name = user.displayName || user.email;
+      document.getElementById("welcome-name").textContent = `Hi, ${name}`;
+    };
+
+    const showSignedOut = () => {
+      document.querySelector(".auth-signed-out").style.display = "flex";
+      document.querySelector(".auth-signed-in").style.display = "none";
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) showSignedIn(user);
+      else showSignedOut();
+    });
+  </script>
+
+  <!-- Loader -->
+  <script>
+    setTimeout(() => {
+      document.getElementById("loader").classList.add("hidden");
+    }, 2000);
+  </script>
+</body>
+</html>

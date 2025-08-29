@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - CodeKart</title>
+  <link rel="icon" type="image/png" href="assets/images/Technological_Circuit_Logo_in_Orange-removebg-preview.png" />
+  <style>
+    :root { --primary:#FF6B6B; --secondary:#4ECDC4; --bg:#f4f4f4; --card:#fff; --text:#111; }
+    * { box-sizing:border-box; margin:0; padding:0; font-family:'Poppins', sans-serif; }
+    body { background:var(--bg); color:var(--text); }
+    header.navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 2rem; background:var(--card); box-shadow:0 2px 5px rgba(0,0,0,.1); position:sticky; top:0; z-index:10; }
+    #logo { display:flex; align-items:center; gap:8px; font-size:1.5rem; font-weight:bold; color:var(--primary); }
+    #logo img { height:40px; width:auto; }
+    nav ul { display:flex; gap:2rem; list-style:none; }
+    nav ul li a { color:var(--text); text-decoration:none; transition:.3s; }
+    nav ul li a:hover, nav ul li a.active { color:var(--primary); }
+    .hamburger { display:none; font-size:2rem; cursor:pointer; }
+    .auth-section { display:flex; justify-content:center; align-items:center; min-height:80vh; padding:2rem; }
+    .auth-card { background:var(--card); padding:2rem; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,.08); width:100%; max-width:400px; text-align:center; }
+    .auth-card h2 { color:var(--primary); margin-bottom:1rem; }
+    .auth-card form { display:flex; flex-direction:column; gap:1rem; }
+    .auth-card input { padding:.8rem; border:1px solid #ddd; border-radius:8px; outline:none; }
+    .auth-card input:focus { border-color:var(--primary); }
+    .auth-card button { padding:.8rem; border:none; border-radius:8px; background:var(--secondary); color:#fff; font-weight:bold; cursor:pointer; transition:.2s; }
+    .auth-card button:hover { opacity:.9; }
+    .auth-card p { margin-top:1rem; font-size:.9rem; }
+    .auth-card p a { color:var(--primary); }
+    .error { color:#d64545; font-size:.9rem; min-height:1.2rem; }
+    .success { color:#1b8a5a; font-size:.95rem; }
+    @media(max-width:768px){
+      nav ul{ flex-direction:column; gap:1rem; display:none; }
+      nav ul.active{ display:flex; }
+      .hamburger{ display:block; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div id="logo">
+      <img src="assets/images/Technological_Circuit_Logo_in_Orange-removebg-preview.png" alt="CodeKart Logo">
+      <span>CodeKart</span>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="prouduct.html">Explore</a></li>
+        <li><a href="sell.html">Sell</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="hamburger">&#9776;</div>
+  </header>
+
+  <!-- Signup -->
+  <section class="auth-section">
+    <div class="auth-card">
+      <h2>Create Account</h2>
+
+      <form id="signup-form">
+        <input id="full-name" type="text" placeholder="Full Name" required />
+        <input id="email" type="email" placeholder="Email" required />
+        <input id="password" type="password" placeholder="Password (min 6 chars)" minlength="6" required />
+        <input id="confirm-password" type="password" placeholder="Confirm Password" minlength="6" required />
+        <button type="submit" id="signup-btn">Sign Up</button>
+        <div class="error" id="error"></div>
+        <div class="success" id="success"></div>
+      </form>
+
+      <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+  </section>
+
+  <script>
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('nav ul');
+    hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
+  </script>
+
+  <!-- ✅ Firebase + Signup logic (using firebase.js) -->
+  <script type="module">
+    import { auth, db } from "./assets/js/firebase.js";
+    import { createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const $ = (id) => document.getElementById(id);
+    const form = $("signup-form");
+    const errBox = $("error");
+    const okBox = $("success");
+
+    function showError(msg){ errBox.textContent = msg; okBox.textContent = ""; }
+    function showSuccess(msg){ okBox.textContent = msg; errBox.textContent = ""; }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = $("full-name").value.trim();
+      const email = $("email").value.trim();
+      const pass = $("password").value;
+      const cpass = $("confirm-password").value;
+
+      if (!name) return showError("Please enter your full name.");
+      if (pass.length < 6) return showError("Password must be at least 6 characters.");
+      if (pass !== cpass) return showError("Passwords do not match.");
+
+      $("signup-btn").disabled = true;
+
+      try {
+        // Create account
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+
+        // Set displayName on Auth profile
+        await updateProfile(cred.user, { displayName: name });
+
+        // Create user profile doc
+        await setDoc(doc(db, "users", cred.user.uid), {
+          displayName: name,
+          email,
+          role: "buyer",          // default role
+          createdAt: serverTimestamp()
+        });
+
+        showSuccess("Account created! Redirecting to login…");
+        setTimeout(() => { window.location.href = "login.html"; }, 1000);
+
+      } catch (err) {
+        let msg = "Something went wrong. Try again.";
+        if (err.code === "auth/email-already-in-use") msg = "Email already in use.";
+        if (err.code === "auth/invalid-email") msg = "Invalid email.";
+        if (err.code === "auth/weak-password") msg = "Weak password (min 6 chars).";
+        showError(msg);
+        console.error(err);
+      } finally {
+        $("signup-btn").disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
