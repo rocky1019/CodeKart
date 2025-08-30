@@ -141,61 +141,77 @@
       navLinks.classList.toggle('active');
     });
   </script>
-  <script type="module">
- import { db } from "./assets/js/firebase.js";
-    import { collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+<script type="module">
+  import { db } from "./assets/js/firebase.js";
+import { collection, getDocs, query, orderBy } 
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+  const grid = document.querySelector(".products-grid");
 
-const grid = document.querySelector(".products-grid");
-
-// Clear static demo cards
-grid.innerHTML = "<p>Loading templates…</p>";
-
-async function loadProducts() {
-  try {
-    const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
-    const snap = await getDocs(q);
-
-    if (snap.empty) {
-      grid.innerHTML = "<p>No products published yet.</p>";
-      return;
-    }
-
-    grid.innerHTML = ""; // clear loading
-    snap.forEach(doc => {
-      const d = doc.data();
-
-      // Defensive defaults
-      const img = d.thumbUrl || "assets/images/codekart-removebg-preview.png";
-      const title = d.name || "Untitled";
-      const desc = d.description || "No description";
-      const price = d.price ? `₹${d.price}` : "Free";
-
-const id = doc.id; // <-- grab the Firestore doc id
-
-const card = document.createElement("div");
-card.className = "product-card";
-card.innerHTML = `
-  <img src="${img}" alt="${title}">
-  <h3>${title}</h3>
-  <p>${desc}</p>
-  <p><strong>${price}</strong></p>
-  <a href="productsinfo.html?id=${encodeURIComponent(id)}" class="btn">View</a>
+  // Clear static demo cards
+grid.innerHTML = `
+  <div style="display:flex; flex-direction:column; align-items:center; gap:.8rem; padding:2rem; color:#666; font-size:1.1rem;">
+    <div style="
+      border:4px solid #f3f3f3;
+      border-top:4px solid var(--primary);
+      border-radius:50%;
+      width:36px;
+      height:36px;
+      animation: spin 1s linear infinite;
+    "></div>
+    <span>Loading templates…</span>
+  </div>
 `;
-grid.appendChild(card);
 
-      grid.appendChild(card);
-    });
-  } catch (e) {
-    console.error("Failed to load products:", e);
-    grid.innerHTML = "<p>Error loading products.</p>";
+
+  async function loadProducts() {
+    try {
+      const q = query(collection(db, "products"), orderBy("createdAt", "desc"));
+      const snap = await getDocs(q);
+
+      if (snap.empty) {
+        grid.innerHTML = "<p>No products published yet.</p>";
+        return;
+      }
+
+      grid.innerHTML = ""; // clear loading
+      snap.forEach(doc => {
+        const d = doc.data();
+
+        // Defensive defaults
+        const img = d.thumbUrl || "assets/images/codekart-removebg-preview.png";
+        const title = d.name || "Untitled";
+        const desc = d.description || "No description";
+        const price = d.price ? `₹${d.price}` : "Free";
+
+        const id = doc.id;
+
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${img}" alt="${title}">
+          <h3>${title}</h3>
+          <p>${desc}</p>
+          <p><strong>${price}</strong></p>
+          <a href="productsinfo.html?id=${encodeURIComponent(id)}" class="btn">View</a>
+        `;
+        grid.appendChild(card);
+      });
+    } catch (e) {
+      console.error("Failed to load products:", e);
+      grid.innerHTML = "<p>Error loading products.</p>";
+    }
   }
-}
 
-loadProducts();
+  loadProducts();
 </script>
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
 
 </body>
 </html>
